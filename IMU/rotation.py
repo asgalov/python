@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import random
+import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
@@ -26,6 +28,10 @@ def plot_board(ax, b):
     ax.quiver(b.x, b.y, b.z, b.j[0], b.j[1], b.j[2], length=1,pivot="tail",color="b")
     ax.quiver(b.x, b.y, b.z, b.k[0], b.k[1], b.k[2], length=1,pivot="tail",color="g")
 
+def plot_random_vector(q):
+    ax.quiver(random.randrange(0, 5), random.randrange(0, 5), random.randrange(0, 5), 1, 1, 2, length=1,pivot="tail",color="r")
+
+
 q = Quaternion(1,1,1,1)
 q.counter = 123
 y = q.multiply(Quaternion(0,0,0,0))
@@ -44,4 +50,5 @@ frame_interval_ms = 50
 array_of_function_parameters = ()
 plot_board(ax, b)
 #line_ani = animation.FuncAnimation(fig, plot_board, num_of_frames, fargs=(array_of_function_parameters), interval=frame_interval_ms, blit=False)
+line_ani = animation.FuncAnimation(fig, plot_random_vector, num_of_frames, interval=frame_interval_ms, blit=False)
 plt.show()
