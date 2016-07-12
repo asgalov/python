@@ -1,7 +1,7 @@
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
 
 with open('accel_data.txt','r') as f:
     read_data = map(float, f.readlines())
@@ -19,30 +19,6 @@ i = [1,0,0]
 j = [0,1,0]
 k = [0,0,1]
 
-def set_vector(ox, i):
-    ox.set_data([x0, x0 + i[0]], [y0, y0 + i[1]])
-    ox.set_3d_properties([z0, z0 + i[2]])
-
-
-def rotate_around_z(i, alpha):
-    x = i[0] * np.cos(alpha) + i[1] * np.sin(alpha) 
-    y = i[1] * np.cos(alpha) - i[0] * np.sin(alpha)
-    z = i[2]
-    i[0] = x
-    i[1] = y
-    i[2] = z
-
-
-def init_v():
-    ox.set_data([], [])
-    ox.set_3d_properties([])
-    oy.set_data([], [])
-    oy.set_3d_properties([])
-    oz.set_data([], [])
-    oz.set_3d_properties([])
-    return ox, oy, oz
-
-
 def plot_v(n):
     rnd = read_data[n % len(read_data)]
     print read_data[n % len(read_data)]
@@ -58,7 +34,18 @@ def plot_v(n):
 
     return ox,oy,oz
 
+def set_vector(ox, i):
+    ox.set_data([x0, x0 + i[0]], [y0, y0 + i[1]])
+    ox.set_3d_properties([z0, z0 + i[2]])
 
-anim = animation.FuncAnimation(fig, plot_v, init_func=init_v, interval=10, blit=True)
+def rotate_around_z(i, alpha):
+    x = i[0] * np.cos(alpha) + i[1] * np.sin(alpha) 
+    y = i[1] * np.cos(alpha) - i[0] * np.sin(alpha)
+    z = i[2]
+    i[0] = x
+    i[1] = y
+    i[2] = z
+
+anim = animation.FuncAnimation(fig, plot_v, interval=10, blit=True)
 
 plt.show()
