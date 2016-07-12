@@ -22,6 +22,7 @@ def init_v():
     return ox, oy, oz
 
 def plot_v(i):
+    print i
     x = 0
     y = np.sin(2 * np.pi * (x - 0.01 * i))
     z = np.sin(2 * np.pi * (x - 0.01 * i))
@@ -33,6 +34,7 @@ def plot_v(i):
     oz.set_3d_properties([z,z+1])
     return ox,oy,oz
 
-anim = animation.FuncAnimation(fig, plot_v, init_func=init_v, frames=200, interval=10, blit=True)
+#anim = animation.FuncAnimation(fig, plot_v, init_func=init_v, frames=200, interval=10, blit=True)
+anim = animation.FuncAnimation(fig, plot_v, init_func=init_v, interval=10, blit=True)
 
 plt.show()
