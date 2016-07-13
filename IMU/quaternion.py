@@ -11,7 +11,7 @@ class Quaternion:
         a = self.a * q.a - self.b * q.b - self.c * q.c - self.d * q.d
         b = self.b * q.a + self.a * q.b - self.d * q.c + self.c * q.d
         c = self.c * q.a + self.d * q.b + self.a * q.c - self.b * q.d
-        d = self.d * q.a - seld.c * q.b + self.b * q.c + selq.a * q.d
+        d = self.d * q.a - self.c * q.b + self.b * q.c + self.a * q.d
         return Quaternion(a,b,c,d)
 
     def conjugate(self):
@@ -25,6 +25,6 @@ class Quaternion:
         n2 = self.norm() ** 2
         return Quaternion(q.a / n2, q.b / n2, q.c / n2, q.d / n2) 
 
-    def get_normalized(q):
-        return Quaternion(q.a / q.norm(), q.b / q.norm(),
-                          q.c / q.norm(), q.d / q.norm) 
+    def normalize(q):
+        n = q.norm()
+        return Quaternion(q.a / n, q.b / n, q.c / n, q.d / n) 
