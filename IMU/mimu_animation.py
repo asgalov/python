@@ -1,14 +1,11 @@
 import numpy as np
-import random
+import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
 from quaternion import Quaternion
+from mimu import Mimu
 
-with open('accel_data.txt','r') as f:
-    read_data = map(float, f.readlines())
-
-f.close()
 
 fig = plt.figure()
 ax = fig.gca(projection='3d', xlim=(-3, 3), ylim=(-3, 3), zlim=(-3,3))
@@ -16,35 +13,29 @@ ox, = ax.plot([], [], lw=2)
 oy, = ax.plot([], [], lw=2)
 oz, = ax.plot([], [], lw=2)
 
-x0,y0,z0 = 0,0,0
-qi = Quaternion(0,1,0,0)
-qj = Quaternion(0,0,1,0)
-qk = Quaternion(0,0,0,1)
+mimu = Mimu()
+#df = read_csv('imu_sim_data.csv')
 
 def plot_v(n):
-    rnd = read_data[n % len(read_data)]
-    global qi,qj,qk
-    alpha = np.sign(0.5 - random.random()) * np.pi * rnd / 10.0
+    rnd = 1 #float(df.iloc[n]['wx']) * 0.1
+    print rnd
+    alpha = np.pi * rnd / 10.0
     qz = Quaternion(np.cos(alpha / 2), 0, 0, np.sin(alpha / 2))
-    qz = Quaternion.normalize(qz)
     qx = Quaternion(np.cos(alpha / 2), np.sin(alpha / 2), 0, 0)
-    qx = Quaternion.normalize(qx)
-    print alpha
-    qi = qx.conjugate().multiply(qz.conjugate()).multiply(qi).multiply(qz).multiply(qx)
-    qj = qx.conjugate().multiply(qz.conjugate()).multiply(qj).multiply(qz).multiply(qx)
-    qk = qx.conjugate().multiply(qz.conjugate()).multiply(qk).multiply(qz).multiply(qx)
-    set_quaternion(ox, qi) 
-    set_quaternion(oy, qj) 
-    set_quaternion(oz, qk) 
+    mimu.rotate(qz)
+    mimu.rotate(qx)
+    plot_attitude(mimu)
     return ox,oy,oz
 
-def set_quaternion(ox, q):
+def plot_attitude(mimu):
+    global ox, oy, oz
+    plot_vector(ox, mimu.x0, mimu.y0, mimu.z0, mimu.qi)
+    plot_vector(oy, mimu.x0, mimu.y0, mimu.z0, mimu.qj)
+    plot_vector(oz, mimu.x0, mimu.y0, mimu.z0, mimu.qk)
+
+def plot_vector(ox, x0, y0, z0, q):
     ox.set_data([x0, x0 + q.b], [y0, y0 + q.c])
     ox.set_3d_properties([z0, z0 + q.d])
-
-def set_vector(ox, i):
-    ox.set_data([x0, x0 + i[0]], [y0, y0 + i[1]])
-    ox.set_3d_properties([z0, z0 + i[2]])
 
 anim = animation.FuncAnimation(fig, plot_v, interval=10, blit=True)
 

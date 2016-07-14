@@ -1,4 +1,5 @@
 import math
+import pandas as pd
 
 # initial parameters of pendulum motion:
 theta0 = math.pi / 6 # initial angle 
@@ -9,7 +10,9 @@ beta = 60.483 * math.pi / 180 # angle of magnetic field inclination
 t = 0 # initial time
 tick = 0.1 # sampling period in sec
 
-print "t_sec ax ay az wx wy wz mx my mz"
+df = pd.DataFrame(columns=['t_sec', 'ax', 'ay', 'az', 'wx', 'wy', 'wz', 'mx', 'my', 'mz'])
+
+print "# t_sec ax ay az wx wy wz mx my mz"
 for i in range(0, 1000):
     t += tick
     theta = theta0 * math.cos(math.sqrt(g/l) * t)
@@ -31,7 +34,7 @@ for i in range(0, 1000):
     my = 0
     mz = B * math.sin(beta + theta)
 
-    print t,ax,ay,az,wx,wy,wz,mx,my,mz
+    df.loc[i] = [t,ax,ay,az,wx,wy,wz,mx,my,mz]
+#    f.write(t,ax,ay,az,wx,wy,wz,mx,my,mz)
 
-
-        
+df.to_csv('imu_sim_data.csv')
