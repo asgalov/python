@@ -18,12 +18,14 @@ with open('imu_sim_data.csv', 'r') as f:
 # calc MIMU board attitude for each measurements
 mimu = Mimu()
 attitude = []
+q = Quaternion(1,1,1,1)
+q = Quaternion.normalize(q)
 for msr in msrlist:
-    alpha = msr['wy']
-    qz = Quaternion(np.cos(alpha / 2), 0, 0, np.sin(alpha / 2))
-    qx = Quaternion(np.cos(alpha / 2), np.sin(alpha / 2), 0, 0)
-    mimu.rotate(qz)
-    mimu.rotate(qx)
+    w = Quaternion(0, msr['wx'], msr['wy'], msr['wz'])
+    t = 0.1
+    q = q.add(w.multiply(q).scalar_multiply(0.5 * t)) 
+    q = Quaternion.normalize(q)
+    mimu.rotate(q)
     attitude.append(copy.deepcopy(mimu))
  
 # plow MIMU attitude

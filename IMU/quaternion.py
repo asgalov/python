@@ -20,6 +20,12 @@ class Quaternion:
     def norm(self):
         return math.sqrt(self.a ** 2 + self.b ** 2 + self.c ** 2 + self.d ** 2)
 
+    def scalar_multiply(self, k):
+        return Quaternion(self.a * k, self.b * k, self.c * k, self.d * k)
+
+    def add(self, q):
+        return Quaternion(self.a + q.a, self.b + q.b, self.c + q.c, self.d + q.d)
+
     def inverse(self):
         q = self.conjugate()
         n2 = self.norm() ** 2
