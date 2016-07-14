@@ -14,11 +14,11 @@ oy, = ax.plot([], [], lw=2)
 oz, = ax.plot([], [], lw=2)
 
 mimu = Mimu()
-#df = read_csv('imu_sim_data.csv')
+df = pd.read_csv('imu_sim_data.csv')
 
 def plot_v(n):
-    rnd = 1 #float(df.iloc[n]['wx']) * 0.1
-    print rnd
+    rnd = float(df.iloc[n]['wy']) * 0.1
+    print df.iloc[n]
     alpha = np.pi * rnd / 10.0
     qz = Quaternion(np.cos(alpha / 2), 0, 0, np.sin(alpha / 2))
     qx = Quaternion(np.cos(alpha / 2), np.sin(alpha / 2), 0, 0)
