@@ -1,4 +1,5 @@
 import math
+import matplotlib.pyplot as plt
 
 class Pendulum:
     def __init__(self,
@@ -47,14 +48,21 @@ class Pendulum:
             msrlist.append(dict(zip(keys, values)))
         return msrlist
 
+def print_to_file(filename, msrlist):
+    with open(filename, 'w') as f:
+        f.write("t_sec ax ay az wx wy wz mx my mz \n")
+        for msr in msrlist:
+            msrstr = ''
+            for v in msr.itervalues():   
+                msrstr += str(v) + ' '
+            f.write(msrstr[:-1] + '\n')
+    f.close()
+
+def plot_measurements(msrlist):
+    plt.plot(msrlist)
+    plt.show()
+
 
 pend = Pendulum()
 msrlist = pend.generate_measurements()
-with open('imu_sim_data.csv', 'w') as f:
-    f.write("t_sec ax ay az wx wy wz mx my mz \n")
-    for msr in msrlist:
-        msrstr = ''
-        for v in msr.itervalues():   
-            msrstr += str(v) + ' '
-        f.write(msrstr[:-1] + '\n')
-f.close()
+print_to_file('imu_sim_data.csv', msrlist)
