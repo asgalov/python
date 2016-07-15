@@ -7,7 +7,7 @@ from quaternion import Quaternion
 from mimu import Mimu
 
 # read IMU measurements in the following format:
-# 'n','t_sec', 'ax', 'ay', 'az', 'wx', 'wy', 'wz', 'mx', 'my', 'mz'
+# 't_sec', 'ax', 'ay', 'az', 'wx', 'wy', 'wz', 'mx', 'my', 'mz'
 msrlist = []
 with open('imu_sim_data.csv', 'r') as f:
     keys = next(f).split()
@@ -18,12 +18,12 @@ with open('imu_sim_data.csv', 'r') as f:
 # calc MIMU board attitude for each measurements
 mimu = Mimu()
 attitude = []
-q = Quaternion(1,1,1,1)
+q = Quaternion(1,0,0,0)
 q = Quaternion.normalize(q)
 for msr in msrlist:
     w = Quaternion(0, msr['wx'], msr['wy'], msr['wz'])
-    t = 0.1
-    q = q.add(w.multiply(q).scalar_multiply(0.5 * t)) 
+    t = 0.01
+    q = q.add(w.multiply(q).scalar_multiply(t/2)) 
     q = Quaternion.normalize(q)
     mimu.rotate(q)
     attitude.append(copy.deepcopy(mimu))
@@ -50,5 +50,5 @@ def plot_vector(ox, x0, y0, z0, q):
     ox.set_data([x0, x0 + q.b], [y0, y0 + q.c])
     ox.set_3d_properties([z0, z0 + q.d])
 
-anim = animation.FuncAnimation(fig, plot_v, interval=10, blit=True)
+anim = animation.FuncAnimation(fig, plot_v, interval=100, blit=True)
 plt.show()
