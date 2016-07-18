@@ -16,18 +16,18 @@ with open('imu_sim_data.csv', 'r') as f:
         msrlist.append(dict(zip(keys, values)))
 
 # calc MIMU board attitude for each measurements
-mimu = Mimu()
 attitude = []
 q = Quaternion(1,0,0,0)
 q = Quaternion.normalize(q)
 for msr in msrlist:
     w = Quaternion(0, msr['wx'], msr['wy'], msr['wz'])
-    t = 0.01
+    t = 0.05
     q = q.add(w.multiply(q).scalar_multiply(t/2)) 
     q = Quaternion.normalize(q)
+    mimu = Mimu()
     mimu.rotate(q)
     attitude.append(copy.deepcopy(mimu))
- 
+
 # plow MIMU attitude
 fig = plt.figure()
 ax = fig.gca(projection='3d', xlim=(-3, 3), ylim=(-3, 3), zlim=(-3,3))
@@ -36,7 +36,7 @@ oy, = ax.plot([], [], lw=2)
 oz, = ax.plot([], [], lw=2)
 
 def plot_v(n):
-    mimu = attitude[n]
+    mimu = attitude[n % len(attitude)]
     plot_attitude(mimu)
     return ox,oy,oz
 
@@ -50,5 +50,5 @@ def plot_vector(ox, x0, y0, z0, q):
     ox.set_data([x0, x0 + q.b], [y0, y0 + q.c])
     ox.set_3d_properties([z0, z0 + q.d])
 
-anim = animation.FuncAnimation(fig, plot_v, interval=100, blit=True)
+anim = animation.FuncAnimation(fig, plot_v, interval=5, blit=True)
 plt.show()

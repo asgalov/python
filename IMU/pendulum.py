@@ -21,6 +21,8 @@ class Pendulum:
 
     def generate_measurements(self):
         msrlist = []
+        attitude = []
+        times = []
         keys=['t_sec', 'ax', 'ay', 'az', 'wx', 'wy', 'wz', 'mx', 'my', 'mz']
         t = 0  # initial time
         for i in range(0, int(self.total_time_sec / self.tick_sec)):
@@ -46,7 +48,9 @@ class Pendulum:
 
             values = [t,ax,ay,az,wx,wy,wz,mx,my,mz]
             msrlist.append(dict(zip(keys, values)))
-        return msrlist
+            attitude.append(theta)
+            times.append(t)
+        return msrlist, attitude, times
 
 def print_to_file(filename, msrlist):
     with open(filename, 'w') as f:
@@ -64,5 +68,7 @@ def plot_measurements(msrlist):
 
 
 pend = Pendulum()
-msrlist = pend.generate_measurements()
+msrlist, attitude, times = pend.generate_measurements()
 print_to_file('imu_sim_data.csv', msrlist)
+plt.plot(times, attitude)
+plt.show()
