@@ -21,7 +21,7 @@ q = Quaternion(1,0,0,0)
 q = Quaternion.normalize(q)
 for msr in msrlist:
     w = Quaternion(0, msr['wx'], msr['wy'], msr['wz'])
-    t = 0.05
+    t = 0.01
     q = q.add(w.multiply(q).scalar_multiply(t/2)) 
     q = Quaternion.normalize(q)
     mimu = Mimu()
