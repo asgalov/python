@@ -79,7 +79,6 @@ class Pendulum:
         my = 0
         mz = self.B * math.sin(self.beta + theta)
         return [t,ax,ay,az,wx,wy,wz,mx,my,mz]
-        
 
 def print_to_file(filename, msrlist):
     with open(filename, 'w') as f:
@@ -93,14 +92,23 @@ def print_to_file(filename, msrlist):
             print msrstr
     f.close()
 
+def read_msr_from_file(filename):
+    msrlist = []
+    with open(filename, 'r') as f:
+        keys = next(f).split()
+        for line in f:
+            values = map(float, line.split())
+            msrlist.append(dict(zip(keys, values)))
+    f.close()
+    return msrlist
+
 def plot_measurements(msrlist):
     plt.plot(msrlist)
     plt.show()
 
-
-pend = Pendulum()
-msrlist, attitude, vel, times = pend.generate_measurements()
-print_to_file('imu_sim_data.csv', msrlist)
-    
-plt.plot(times, vel)
-plt.show()
+#pend = Pendulum()
+#msrlist, attitude, vel, times = pend.generate_measurements()
+#print_to_file('imu_sim_data.csv', msrlist)
+#    
+#plt.plot(times, vel)
+#plt.show()
