@@ -6,7 +6,27 @@ import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
 from quaternion import Quaternion
 import pendulum
-from mimu import Mimu
+from complimentary_filter import ComplimentaryFilter
+
+class Mimu:
+    def __init__(self, qi_0 = Quaternion(0,1,0,0),
+                       qj_0 = Quaternion(0,0,1,0),
+                       qk_0 = Quaternion(0,0,0,1),
+                       x0 = 0,
+                       y0 = 0,
+                       z0 = 0):
+        self.qi = qi_0
+        self.qj = qj_0
+        self.qk = qk_0
+        self.x0 = x0 
+        self.y0 = y0
+        self.z0 = z0
+
+    def rotate(self, q):
+        self.qi = q.conjugate().multiply(self.qi).multiply(q)
+        self.qj = q.conjugate().multiply(self.qj).multiply(q)
+        self.qk = q.conjugate().multiply(self.qk).multiply(q)
+
 
 # read IMU measurements in the following format:
 # 't_sec', 'ax', 'ay', 'az', 'wx', 'wy', 'wz', 'mx', 'my', 'mz'
@@ -15,18 +35,11 @@ msrlist = pendulum.read_msr_from_file('imu_sim_data.csv')
 
 # calc MIMU board attitude for each measurements
 attitude = []
-initial_angle = math.pi / 6 
-initial_attitude = Quaternion(math.cos(initial_angle),0,math.sin(initial_angle),0)
-q = Quaternion(1,0,0,0)
-q = Quaternion.normalize(q)
+cp = ComplimentaryFilter()
 for msr in msrlist:
-    w = Quaternion(0, msr['wx'], msr['wy'], msr['wz'])
-    t = 0.01
-    q = q.add(w.multiply(q).scalar_multiply(t/2)) 
-    q = Quaternion.normalize(q)
+    cp.update(msr)
     mimu = Mimu()
-    #mimu.rotate(initial_attitude)
-    mimu.rotate(q)
+    mimu.rotate(cp.q)
     attitude.append(copy.deepcopy(mimu))
 
 # plow MIMU attitude
