@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
 from quaternion import Quaternion
-import pendulum
+from pendulum import Pendulum
 from complimentary_filter import ComplimentaryFilter
 
 class Mimu:
@@ -30,8 +30,10 @@ class Mimu:
 
 # read IMU measurements in the following format:
 # 't_sec', 'ax', 'ay', 'az', 'wx', 'wy', 'wz', 'mx', 'my', 'mz'
-msrlist = []
-msrlist = pendulum.read_msr_from_file('imu_sim_data.csv')
+pend = Pendulum(theta0 = math.pi / 6, l = 1)
+msrlist, attitude, vel, times = pend.generate_measurements()
+#msrlist = []
+#msrlist = pendulum.read_msr_from_file('imu_sim_data.csv')
 
 # calc MIMU board attitude for each measurements
 attitude = []
@@ -39,7 +41,8 @@ cp = ComplimentaryFilter()
 for msr in msrlist:
     cp.update(msr)
     mimu = Mimu()
-    mimu.rotate(cp.q)
+    #mimu.rotate(cp.q)
+    mimu.rotate(cp.fqa(msr))
     attitude.append(copy.deepcopy(mimu))
 
 # plow MIMU attitude

@@ -1,6 +1,9 @@
 import math
+import random
 import pdb
 import matplotlib.pyplot as plt
+
+#TODO write typicall MPU characteristics for gyro and accel errors
 
 class Pendulum:
     keys=['t_sec', 'ax', 'ay', 'az', 'wx', 'wy', 'wz', 'mx', 'my', 'mz']
@@ -28,7 +31,7 @@ class Pendulum:
         vel = []
         times = []
         # initial values 
-        theta = math.pi / 6
+        theta = self.theta0
         w_theta = 0
         t = 0  
         for i in range(0, int(self.total_time_sec / self.tick_sec)):
@@ -67,9 +70,9 @@ class Pendulum:
 
     def generate_msr(self, t, theta, w_theta, a_theta):
         # generate acceleration measurements:
-        ax = self.l * a_theta + self.g * math.sin(theta)  
-        ay = 0
-        az = -self.l * w_theta**2 - self.g * math.cos(theta)
+        ax = self.l * a_theta + self.g * math.sin(theta) + random.random() 
+        ay = 0 + random.random() 
+        az = -self.l * w_theta**2 - self.g * math.cos(theta) + random.random() 
         # generate angular rate measurements:
         wx = 0
         wy = w_theta
@@ -79,6 +82,7 @@ class Pendulum:
         my = 0
         mz = self.B * math.sin(self.beta + theta)
         return [t,ax,ay,az,wx,wy,wz,mx,my,mz]
+
 
 def print_to_file(filename, msrlist):
     with open(filename, 'w') as f:
