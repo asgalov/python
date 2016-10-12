@@ -43,7 +43,7 @@ class Pendulum:
             attitude.append(180 * theta / math.pi)
             vel.append(180 * w_theta / math.pi)
             times.append(t)
-        return msrlist, attitude, vel,times
+        return msrlist, attitude, vel, times
 
     def kutta(self, t, theta, w_theta):
         h = self.tick_sec
@@ -70,9 +70,9 @@ class Pendulum:
 
     def generate_msr(self, t, theta, w_theta, a_theta):
         # generate acceleration measurements:
-        ax = self.l * a_theta + self.g * math.sin(theta) + random.random() 
-        ay = 0 + random.random() 
-        az = -self.l * w_theta**2 - self.g * math.cos(theta) + random.random() 
+        ax = self.l * a_theta + self.g * math.sin(theta) 
+        ay = 0
+        az = -self.l * w_theta**2 - self.g * math.cos(theta)
         # generate angular rate measurements:
         wx = 0
         wy = w_theta
