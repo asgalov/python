@@ -1,16 +1,14 @@
 import copy
-import matplotlib.pyplot as plt
+
 import matplotlib.animation as animation
-from mpl_toolkits.mplot3d import Axes3D
-from quaternion import Quaternion
+import matplotlib.pyplot as plt
+
+import quaternion
+
 
 class Mimu:
-    def __init__(self, qi_0 = Quaternion(0,1,0,0),
-                       qj_0 = Quaternion(0,0,1,0),
-                       qk_0 = Quaternion(0,0,0,1),
-                       x0 = 0,
-                       y0 = 0,
-                       z0 = 0):
+    def __init__(self, qi_0=quaternion.Quaternion(0, 1, 0, 0), qj_0=quaternion.Quaternion(0, 0, 1, 0),
+                 qk_0=quaternion.Quaternion(0, 0, 0, 1), x0=0, y0=0, z0=0):
         self.qi = qi_0
         self.qj = qj_0
         self.qk = qk_0
@@ -22,6 +20,7 @@ class Mimu:
         self.qi = q.conjugate().multiply(self.qi).multiply(q)
         self.qj = q.conjugate().multiply(self.qj).multiply(q)
         self.qk = q.conjugate().multiply(self.qk).multiply(q)
+
 
 class Animator:
     """animate rotation of MIMU board with given quaternion sequence
@@ -54,6 +53,7 @@ class Animator:
     def animate(self):
         anim = animation.FuncAnimation(self.fig, self.plot_v, interval=5, blit=True)
         plt.show()
+
 
 def plot_vector(ox, x0, y0, z0, q):
     ox.set_data([x0, x0 + q.b], [y0, y0 + q.c])
