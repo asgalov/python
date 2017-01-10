@@ -1,12 +1,11 @@
 import math
-import copy
-from noise import Noise
-from animation import Animator
-from quaternion import Quaternion
-from pendulum import Pendulum
-from complimentary_filter import ComplimentaryFilter
 
-pend = Pendulum(theta0 = math.pi / 6, l = 1)
+from animation import Animator
+from complimentary_filter import ComplimentaryFilter
+from noise import Noise
+from pendulum import Pendulum
+
+pend = Pendulum(theta0=math.pi / 6, l=1)
 msrlist, attitude, vel, times = pend.generate_measurements()
 
 quaternions = []

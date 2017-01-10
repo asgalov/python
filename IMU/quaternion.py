@@ -1,12 +1,16 @@
 import math
 
+
 class Quaternion:
     def __init__(self, qa, qb, qc, qd):
         self.a = qa
         self.b = qb
         self.c = qc
         self.d = qd
-        
+
+    def __str__(self):
+        return "quaternion: {" + str(self.a) + ", " + str(self.b) + ", " + str(self.c) + ", " + str(self.d) + "}"
+
     def multiply(self, q):
         a = self.a * q.a - self.b * q.b - self.c * q.c - self.d * q.d
         b = self.b * q.a + self.a * q.b - self.d * q.c + self.c * q.d

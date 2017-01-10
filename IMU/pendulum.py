@@ -93,8 +93,9 @@ def print_to_file(filename, msrlist):
             for k in Pendulum.keys:
                 msrstr += str(msr.get(k)) + ' '
             f.write(msrstr[:-1] + '\n')
-            print msrstr
+            print(msrstr)
     f.close()
+
 
 def read_msr_from_file(filename):
     msrlist = []
