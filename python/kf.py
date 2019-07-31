@@ -71,3 +71,5 @@ axarr[1].plot(x, filtered, color="red")
 #plt.plot(x, covariance)
 #plt.plot(x, vv)
 plt.show()
+
+print('Hello!')
